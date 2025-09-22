@@ -1,232 +1,376 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gibby Monster Fan Club</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>gibbyverse</title>
+<link rel="icon" href="https://i.pinimg.com/originals/68/2f/10/682f1057d80e74d0e90e6c65b6ff09be.gif">
 <style>
-    body {
-        margin: 0;
-        font-family: 'Comic Sans MS', sans-serif;
-        background: url('https://i.pinimg.com/originals/3e/6f/18/3e6f187d12c877cc40f7a48727c1a927.gif') no-repeat center center fixed;
-        background-size: cover;
-        color: #fff;
-        overflow-x: hidden;
-    }
-    h1 {
-        text-align: center;
-        font-size: 4em;
-        text-shadow: 2px 2px #000;
-        margin-top: 0.5em;
-        animation: wobble 2s infinite;
-    }
-    @keyframes wobble {
-        0%, 100% { transform: rotate(-5deg); }
-        50% { transform: rotate(5deg); }
-    }
-    nav {
-        text-align: center;
-        margin: 1em 0;
-    }
-    nav button {
-        font-size: 1.2em;
-        margin: 0 0.5em;
-        padding: 0.5em 1em;
-        cursor: pointer;
-        border: none;
-        border-radius: 10px;
-        background-color: #ff00ff;
-        color: #fff;
-        transition: all 0.3s;
-    }
-    nav button:hover {
-        transform: scale(1.2) rotate(10deg);
-    }
-    #content {
-        max-width: 1000px;
-        margin: auto;
-        text-align: center;
-    }
-    .hidden {
-        display: none;
-    }
-    .gallery img {
-        width: 200px;
-        height: 200px;
-        margin: 1em;
-        border: 3px solid #fff;
-        border-radius: 20px;
-        cursor: pointer;
-        transition: transform 0.3s;
-    }
-    .gallery img:hover {
-        transform: scale(1.3) rotate(15deg);
-    }
-    .poll, .soundboard, .secret {
-        margin-top: 2em;
-        padding: 1em;
-        background: rgba(0,0,0,0.6);
-        border-radius: 20px;
-    }
-    button.sound-btn {
-        background: #00ffff;
-        color: #000;
-        margin: 0.5em;
-        font-size: 1em;
-        border-radius: 50%;
-        padding: 1em;
-    }
-    #confetti-canvas {
-        position: fixed;
-        top: 0;
-        left: 0;
-        pointer-events: none;
-        z-index: 9999;
-    }
+  /* minimal reset */
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  :root{
+    --pink:#ff2d95; --yellow:#ffd300; --green:#35ff7a; --cyan:#19b8ff;
+    --bg:#07030a; --glass:rgba(255,255,255,0.04);
+  }
+  body{
+    font-family: "Comic Sans MS","Impact",system-ui,Segoe UI,Roboto,Arial;
+    background:
+      radial-gradient(circle at 10% 20%, rgba(255,45,149,0.06), transparent 8%),
+      radial-gradient(circle at 90% 80%, rgba(53,255,122,0.04), transparent 8%),
+      linear-gradient(135deg,#0b0312 0%, #120220 60%);
+    color:#fff; min-height:100vh; overflow-x:hidden;
+  }
+
+  /* header */
+  header{position:sticky;top:0;z-index:1000;background:linear-gradient(90deg,rgba(0,0,0,0.25),rgba(0,0,0,0.15));backdrop-filter:blur(6px);border-bottom:3px solid rgba(255,255,255,0.02)}
+  .nav{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:10px 16px;gap:12px}
+  .brand{display:flex;align-items:center;gap:10px}
+  .logo{width:56px;height:56px;border-radius:12px;background:url('https://i.pinimg.com/originals/68/2f/10/682f1057d80e74d0e90e6c65b6ff09be.gif') center/cover;box-shadow:0 8px 30px rgba(0,0,0,0.6)}
+  .title{font-weight:900;color:var(--pink);text-transform:uppercase;letter-spacing:1px}
+  nav .btns{display:flex;gap:8px;align-items:center}
+  .btn{background:linear-gradient(90deg,var(--pink),var(--yellow));border:none;padding:8px 12px;border-radius:12px;color:#071019;font-weight:800;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,0.4);transition:transform .18s}
+  .btn:hover{transform:translateY(-4px) rotate(-2deg)}
+  .smallbtn{padding:6px 10px;background:rgba(255,255,255,0.03);color:#fff;border-radius:10px;border:1px solid rgba(255,255,255,0.02)}
+
+  /* hero */
+  .hero{max-width:1200px;margin:20px auto;display:grid;grid-template-columns:1fr 360px;gap:18px;align-items:start;padding:14px}
+  .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.25));border-radius:16px;padding:16px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 12px 40px rgba(0,0,0,0.6)}
+  .hero-left .headline{font-size: clamp(26px,6vw,48px);line-height:1; text-shadow:0 8px 30px rgba(0,0,0,0.6); color: #fff}
+  .sub{color:rgba(255,255,255,0.8);margin-top:8px;font-size:0.95rem}
+
+  /* giant gibby card */
+  .gibby-card{display:flex;flex-direction:column;align-items:center;gap:10px}
+  .gibby-giant{width:260px;height:260px;border-radius:20px;background:url('https://i.pinimg.com/originals/68/2f/10/682f1057d80e74d0e90e6c65b6ff09be.gif') center/cover;box-shadow:0 20px 50px rgba(0,0,0,0.6)}
+  .belly{padding:8px 12px;border-radius:999px;background:linear-gradient(90deg,var(--green),var(--pink));color:#06110a;font-weight:900;cursor:pointer;border:none}
+
+  /* main layout */
+  main{max-width:1200px;margin:18px auto;display:grid;grid-template-columns:1fr 360px;gap:18px;padding:8px}
+  .leftcol{display:flex;flex-direction:column;gap:14px}
+  .rightcol{display:flex;flex-direction:column;gap:14px;position:sticky;top:84px}
+
+  /* polaroid gallery */
+  .polaroid-grid{display:flex;flex-wrap:wrap;gap:14px}
+  .polaroid{width:160px;background:#fff;color:#111;padding:10px;border-radius:10px;transform:rotate(var(--r));box-shadow:0 12px 30px rgba(0,0,0,0.5);position:relative;overflow:hidden}
+  .polaroid img{width:120px;height:120px;object-fit:cover;border-radius:8px}
+  .tape{position:absolute;left:12px;top:-8px;width:56px;height:18px;background:url('https://i.imgur.com/JkG3b8B.png') center/cover;transform:rotate(-6deg);opacity:0.95}
+  .caption{font-weight:800;margin-top:8px;font-size:0.85rem}
+
+  /* clips */
+  .clips-grid{display:flex;gap:10px;flex-wrap:wrap}
+  .clip{width:220px;border-radius:8px;overflow:hidden;background:#000}
+  .clip img{width:100%;height:140px;object-fit:cover;display:block}
+
+  /* fan corner */
+  .submit-box{display:flex;flex-direction:column;gap:8px}
+  .submit-box input,.submit-box textarea{padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:rgba(0,0,0,0.25);color:#fff;font-family:inherit}
+  .fan-list{max-height:320px;overflow:auto;margin-top:10px;display:flex;flex-direction:column;gap:8px}
+
+  /* leaderboard stinkbucks */
+  .leader{display:flex;align-items:center;gap:10px;padding:8px;border-radius:10px;background:linear-gradient(90deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))}
+  .stink{font-weight:900;color:var(--pink);margin-left:auto}
+
+  /* mini-game */
+  #game-area{position:relative;background:linear-gradient(180deg, rgba(0,0,0,0.35), rgba(0,0,0,0.25));height:260px;border-radius:10px;overflow:hidden}
+  .gibby-mini{width:48px;height:48px;background:url('https://i.pinimg.com/originals/68/2f/10/682f1057d80e74d0e90e6c65b6ff09be.gif') center/cover;position:absolute;border-radius:8px;cursor:pointer}
+
+  /* secret dance overlay */
+  .dance-overlay{position:fixed;inset:0;background:linear-gradient(45deg, rgba(255,45,149,0.06), rgba(53,255,122,0.04));pointer-events:none;mix-blend-mode:screen;opacity:0;transition:opacity .36s}
+  .dance-overlay.on{opacity:1}
+
+  footer{max-width:1200px;margin:24px auto;text-align:center;color:rgba(255,255,255,0.7);padding:24px}
+
+  /* responsiveness */
+  @media(max-width:980px){
+    .hero{grid-template-columns:1fr;gap:12px}
+    main{grid-template-columns:1fr;gap:12px}
+    .rightcol{position:static;top:auto}
+    .gibby-giant{width:200px;height:200px}
+  }
 </style>
 </head>
 <body>
-<h1>WELCOME TO THE GIBBY MONSTER FAN CLUB</h1>
-<nav>
-    <button onclick="showSection('gallery')">Draw Gibby</button>
-    <button onclick="showSection('poll')">Dumb Polls</button>
-    <button onclick="showSection('soundboard')">Soundboard</button>
-    <button onclick="showSection('secret')">Secret Page</button>
-</nav>
 
-<div id="content">
-    <!-- Gallery -->
-    <div id="gallery" class="hidden gallery">
-        <h2>Gibby Artwork Gallery</h2>
-        <p>Submit your masterpiece to the chaos!</p>
-        <input type="file" id="upload" accept="image/*">
-        <div id="gallery-display"></div>
+<header>
+  <div class="nav">
+    <div class="brand"><div class="logo" id="logo"></div><div class="title">gibbyverse</div></div>
+    <nav class="btns">
+      <button class="btn" onclick="scrollTo('home')">home</button>
+      <button class="btn" onclick="scrollTo('gallery')">gallery</button>
+      <button class="btn" onclick="scrollTo('clips')">clips</button>
+      <button class="btn" onclick="scrollTo('fans')">fan corner</button>
+      <button class="smallbtn" onclick="revealSecret()">secret</button>
+    </nav>
+  </div>
+</header>
+
+<section id="home" class="hero">
+  <div class="card hero-left">
+    <div class="headline">WELCOME TO THE GIBBYVERSE — ALL HAIL GIBBY</div>
+    <div class="sub">the ultimate shrine for gibby monsters. press the big button to join, drop art, fight for stinkbucks, and unlock the dance lair. keyboard shortcuts: p = party, g = gift, s = secret.</div>
+    <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn" onclick="joinClub()">join the gibby monsters</button>
+      <button class="smallbtn" onclick="scrollTo('gallery')">drop fan art</button>
+      <button class="smallbtn" onclick="scrollTo('fans')">say hi to gibby</button>
     </div>
+    <div style="margin-top:12px;color:rgba(255,255,255,0.7)">pro tip: hover polaroids for a squeak. click gibby's belly for ultimate chaos.</div>
+  </div>
 
-    <!-- Poll -->
-    <div id="poll" class="hidden poll">
-        <h2>Dumb Polls</h2>
-        <p>What should Gibby do today?</p>
-        <button onclick="vote('Eat a taco')">Eat a taco</button>
-        <button onclick="vote('Jump in a puddle')">Jump in a puddle</button>
-        <p id="poll-result"></p>
-    </div>
+  <div class="card gibby-card">
+    <div id="gibby-giant" class="gibby-giant" title="click belly for dance"></div>
+    <button id="belly-btn" class="belly" onclick="toggleDance()">gibby's belly (click me)</button>
+    <div style="font-size:0.9rem;color:rgba(255,255,255,0.8)">gibby loves tacos. gibby hates socks. gibby is love.</div>
+  </div>
+</section>
 
-    <!-- Soundboard -->
-    <div id="soundboard" class="hidden soundboard">
-        <h2>Soundboard</h2>
-        <button class="sound-btn" onclick="playSound('https://www.soundjay.com/button/beep-07.wav')">Beep</button>
-        <button class="sound-btn" onclick="playSound('https://www.soundjay.com/button/button-16.wav')">Boop</button>
-        <button class="sound-btn" onclick="playSound('https://www.soundjay.com/button/button-3.mp3')">Ouch</button>
-        <button class="sound-btn" onclick="playSound('https://www.soundjay.com/button/button-10.mp3')">Haha</button>
-    </div>
+<main>
+  <div class="leftcol">
+    <section id="gallery" class="card">
+      <h2>polaroid mess (gallery)</h2>
+      <div style="margin:8px 0;color:rgba(255,255,255,0.8)">upload up to 12 images. they'll hang out in your browser local storage (or you can export them).</div>
+      <input id="upload" type="file" accept="image/*" multiple>
+      <div id="polaroid-grid" class="polaroid-grid" style="margin-top:12px"></div>
+      <div style="margin-top:12px;display:flex;gap:8px">
+        <button class="smallbtn" onclick="exportGallery()">export gallery</button>
+        <button class="smallbtn" onclick="clearGallery()">clear gallery</button>
+      </div>
+    </section>
 
-    <!-- Secret -->
-    <div id="secret" class="hidden secret">
-        <h2>Secret Gibby Chaos</h2>
-        <p>Catch Gibby before he steals your shoes!</p>
-        <div id="game-area" style="position:relative;width:500px;height:300px;margin:auto;border:2px solid #fff;"></div>
-    </div>
-</div>
+    <section id="clips" class="card" style="margin-top:12px">
+      <h2>gibby clips</h2>
+      <div class="clips-grid" style="margin-top:10px">
+        <div class="clip"><img src="https://media.giphy.com/media/3o6Zt8MgUuvSbkZYWc/giphy.gif"><div style="padding:8px;font-weight:800">classic wiggle</div></div>
+        <div class="clip"><img src="https://media.giphy.com/media/l0HlTy9x8FZo0XO1i/giphy.gif"><div style="padding:8px;font-weight:800">snack attack</div></div>
+        <div class="clip"><img src="https://media.giphy.com/media/26xBwdIuRJiAIqHwA/giphy.gif"><div style="padding:8px;font-weight:800">tiny dance</div></div>
+      </div>
+    </section>
 
-<canvas id="confetti-canvas"></canvas>
+    <section class="card" style="margin-top:12px">
+      <h2>mini-game — catch gibby</h2>
+      <div id="game-area">
+        <!-- gibby mini will be injected -->
+      </div>
+      <div style="margin-top:8px;display:flex;gap:8px">
+        <button class="smallbtn" onclick="startGame()">start</button>
+        <button class="smallbtn" onclick="stopGame()">stop</button>
+        <div style="margin-left:auto;font-weight:800">score: <span id="game-score">0</span></div>
+      </div>
+    </section>
+  </div>
+
+  <aside class="rightcol">
+    <section class="card">
+      <h3>fan polls</h3>
+      <div style="margin-top:8px;color:rgba(255,255,255,0.8)">what should gibby snack on next?</div>
+      <div style="margin-top:10px;display:flex;gap:8px">
+        <button class="smallbtn" onclick="vote('chips')">chips</button>
+        <button class="smallbtn" onclick="vote('taco')">taco</button>
+        <button class="smallbtn" onclick="vote('candy')">candy</button>
+      </div>
+      <div style="margin-top:12px;font-weight:900" id="poll-result">chips:0 • taco:0 • candy:0</div>
+    </section>
+
+    <section id="fans" class="card">
+      <h3>fan corner</h3>
+      <div style="font-size:0.9rem;color:rgba(255,255,255,0.8);margin-bottom:10px">drop a wholesome gibby message. saved locally. optionally send to google sheet via apps script (paste your webapp url below).</div>
+      <div class="submit-box">
+        <input id="fan-name" placeholder="your name (or gibby monster)">
+        <textarea id="fan-msg" rows="3" placeholder="say something wholesome about gibby"></textarea>
+        <div style="display:flex;gap:8px">
+          <button class="smallbtn" onclick="submitFan()">send</button>
+          <button class="smallbtn" onclick="clearFan()">clear</button>
+        </div>
+        <div style="margin-top:8px;display:flex;gap:8px">
+          <input id="apps-url" placeholder="optional: paste Apps Script webapp url to forward (exec)" style="flex:1;padding:8px;border-radius:8px;background:rgba(0,0,0,0.18);border:1px solid rgba(255,255,255,0.04)">
+          <button class="smallbtn" onclick="testForward()">test</button>
+        </div>
+      </div>
+
+      <div class="fan-list" id="fan-list" style="margin-top:10px"></div>
+    </section>
+
+    <section class="card">
+      <h3>leaderboard — stinkbucks</h3>
+      <div id="leaderboard" style="margin-top:10px">
+        <!-- injected -->
+      </div>
+      <div style="margin-top:10px;display:flex;gap:8px">
+        <button class="smallbtn" onclick="rewardSelf(5)">earn +5</button>
+        <button class="smallbtn" onclick="rewardSelf(25)">earn +25</button>
+        <button class="smallbtn" onclick="clearLeaderboard()">reset</button>
+      </div>
+    </section>
+  </aside>
+</main>
+
+<div class="dance-overlay" id="dance-overlay"></div>
+
+<footer>
+  <div>made with love, snacks & chaos — gibby monsters unite</div>
+  <div style="margin-top:6px;color:rgba(255,255,255,0.6)">keyboard shortcuts: p = toggle party, g = give yourself 10 stinkbucks, c = clear confetti</div>
+</footer>
+
+<canvas id="confetti" style="position:fixed;left:0;top:0;pointer-events:none;z-index:2000"></canvas>
 
 <script>
-    // Section toggling
-    function showSection(section) {
-        const sections = ['gallery','poll','soundboard','secret'];
-        sections.forEach(s => {
-            document.getElementById(s).classList.add('hidden');
-        });
-        document.getElementById(section).classList.remove('hidden');
-    }
+/* ------------ helpers & state ------------- */
+const ls = window.localStorage;
+const polaroidGrid = document.getElementById('polaroid-grid');
+const pollKey = 'gibby_polls_v2';
+const fanKey = 'gibby_fans_v2';
+const galleryKey = 'gibby_gallery_v2';
+const boardKey = 'gibby_board_v2';
+let pollCounts = JSON.parse(ls.getItem(pollKey) || '{"chips":0,"taco":0,"candy":0}');
+let board = JSON.parse(ls.getItem(boardKey) || '[]');
+let gameLoop = null; let gameActive = false; let gameScore = 0;
 
-    // Gallery upload
-    const galleryDisplay = document.getElementById('gallery-display');
-    document.getElementById('upload').addEventListener('change', function(e){
-        const file = e.target.files[0];
-        const reader = new FileReader();
-        reader.onload = function(event){
-            const img = document.createElement('img');
-            img.src = event.target.result;
-            galleryDisplay.appendChild(img);
-        }
-        reader.readAsDataURL(file);
-    });
+/* ========== scroll helper ========== */
+function scrollTo(id){ const el = document.getElementById(id); if(!el) return window.scrollTo({top:0,behavior:'smooth'}); el.scrollIntoView({behavior:'smooth',block:'start'}); }
 
-    // Poll logic
-    let votes = { 'Eat a taco': 0, 'Jump in a puddle': 0 };
-    function vote(option) {
-        votes[option]++;
-        document.getElementById('poll-result').innerText = 
-            `Taco: ${votes['Eat a taco']} | Puddle: ${votes['Jump in a puddle']}`;
-    }
+/* ========== join club ========== */
+function joinClub(){ alert('welcome to the gibby monsters. you now owe gibby 1 taco.'); addLeader('you (fresh monster)',5); }
 
-    // Soundboard
-    function playSound(url) {
-        const audio = new Audio(url);
-        audio.play();
-    }
+/* ========== polls ========== */
+function updatePollUI(){ document.getElementById('poll-result').innerText = \`chips:\${pollCounts.chips} • taco:\${pollCounts.taco} • candy:\${pollCounts.candy}\`; ls.setItem(pollKey, JSON.stringify(pollCounts)); }
+function vote(choice){ if(!pollCounts[choice]) pollCounts[choice]=0; pollCounts[choice]++; updatePollUI(); }
+updatePollUI();
 
-    // Secret game
-    const gameArea = document.getElementById('game-area');
-    const gibby = document.createElement('div');
-    gibby.style.width = '50px';
-    gibby.style.height = '50px';
-    gibby.style.background = 'url(https://i.pinimg.com/originals/68/2f/10/682f1057d80e74d0e90e6c65b6ff09be.gif) no-repeat center/cover';
-    gibby.style.position = 'absolute';
-    gibby.style.top = '0px';
-    gibby.style.left = '0px';
-    gibby.style.cursor = 'pointer';
-    gameArea.appendChild(gibby);
-    gibby.addEventListener('click', ()=>{
-        alert("You caught Gibby! But he stole your socks.");
-    });
-    function moveGibby(){
-        gibby.style.top = Math.random()*250 + 'px';
-        gibby.style.left = Math.random()*450 + 'px';
-    }
-    setInterval(moveGibby, 1000);
+/* ========== fan corner (local + optional forward) ========== */
+function escapeHtml(s){ return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
+function renderFans(){
+  const list = document.getElementById('fan-list'); list.innerHTML='';
+  const arr = JSON.parse(ls.getItem(fanKey) || '[]').slice().reverse();
+  arr.forEach(item=>{
+    const el = document.createElement('div'); el.style.padding='8px'; el.style.borderRadius='8px'; el.style.background='linear-gradient(90deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01))';
+    el.innerHTML = \`<strong style="color:var(--pink)">\${escapeHtml(item.name||'anon')}</strong> <span style="color:rgba(255,255,255,0.85)">— \${escapeHtml(item.msg)}</span><br><small style="color:rgba(255,255,255,0.5)">\${new Date(item.ts).toLocaleString()}</small>\`;
+    list.appendChild(el);
+  });
+}
+function submitFan(){
+  const name = document.getElementById('fan-name').value.trim() || 'gibby monster';
+  const msg = document.getElementById('fan-msg').value.trim();
+  if(!msg){ alert('say something wholesome for gibby, dummy'); return; }
+  const arr = JSON.parse(ls.getItem(fanKey) || '[]'); arr.push({name,msg,ts:Date.now()}); ls.setItem(fanKey, JSON.stringify(arr));
+  document.getElementById('fan-name').value=''; document.getElementById('fan-msg').value=''; renderFans();
+  // optional forward to apps script webapp
+  const url = document.getElementById('apps-url').value.trim();
+  if(url){ fetch(url, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({name,msg,ts:Date.now()})}).catch(e=>console.warn('forward fail',e)); }
+}
+function clearFan(){ document.getElementById('fan-name').value=''; document.getElementById('fan-msg').value=''; }
+renderFans();
 
-    // Confetti chaos
-    const confettiCanvas = document.getElementById('confetti-canvas');
-    confettiCanvas.width = window.innerWidth;
-    confettiCanvas.height = window.innerHeight;
-    const ctx = confettiCanvas.getContext('2d');
-    const confetti = [];
-    for(let i=0;i<300;i++){
-        confetti.push({
-            x: Math.random()*window.innerWidth,
-            y: Math.random()*window.innerHeight,
-            r: Math.random()*6+2,
-            d: Math.random()*300,
-            color: ['#ff0','#0ff','#f0f','#fff'][Math.floor(Math.random()*4)],
-            tilt: Math.random()*10-10
-        });
-    }
-    function drawConfetti(){
-        ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
-        confetti.forEach(c=>{
-            ctx.beginPath();
-            ctx.lineWidth = c.r;
-            ctx.strokeStyle = c.color;
-            ctx.moveTo(c.x + c.tilt + c.r/2, c.y);
-            ctx.lineTo(c.x + c.tilt, c.y + c.tilt + c.r/2);
-            ctx.stroke();
-        });
-        updateConfetti();
-    }
-    function updateConfetti(){
-        confetti.forEach(c=>{
-            c.y += 2;
-            c.x += Math.sin(c.d) * 2;
-            if(c.y > window.innerHeight){
-                c.y = 0;
-                c.x = Math.random()*window.innerWidth;
-            }
-        });
-    }
-    setInterval(drawConfetti, 30);
+/* test forward */
+function testForward(){ const url = document.getElementById('apps-url').value.trim(); if(!url) return alert('paste apps script webapp url first'); fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({test:'ping','ts':Date.now()})}).then(()=>alert('ping sent')).catch(e=>alert('ping failed')); }
+
+/* ========== gallery ========== */
+function loadGallery(){ const arr = JSON.parse(ls.getItem(galleryKey)||'[]'); arr.forEach(src=>addPolaroid(src)); }
+function clearGallery(){ if(confirm('clear local gallery?')){ ls.removeItem(galleryKey); polaroidGrid.innerHTML=''; } }
+function exportGallery(){ const arr = JSON.parse(ls.getItem(galleryKey)||'[]'); if(!arr.length) return alert('no pics'); const blob = new Blob([JSON.stringify(arr)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='gibby-gallery.json'; a.click(); }
+document.getElementById('upload').addEventListener('change', (e)=>{
+  const files = Array.from(e.target.files).slice(0,12);
+  files.forEach(file=>{
+    const reader = new FileReader();
+    reader.onload = ev => { const src=ev.target.result; addPolaroid(src); saveGallery(src); };
+    reader.readAsDataURL(file);
+  });
+  e.target.value='';
+});
+function saveGallery(src){ const arr = JSON.parse(ls.getItem(galleryKey)||'[]'); arr.push(src); ls.setItem(galleryKey, JSON.stringify(arr)); }
+function addPolaroid(src){
+  const p=document.createElement('div'); p.className='polaroid'; p.style.setProperty('--r', (Math.random()*18-9).toFixed(2)+'deg');
+  p.innerHTML = '<div class="tape"></div><img src="'+src+'"><div class="caption">gibby fan art</div>';
+  p.addEventListener('mouseenter', ()=>{ playHover(); });
+  polaroidGrid.appendChild(p);
+}
+loadGallery();
+
+/* hover sfx */
+const hoverSfx = new Audio('https://www.soundjay.com/buttons/sounds/button-16.mp3'); hoverSfx.volume=0.6;
+function playHover(){ try{ const a=hoverSfx.cloneNode(); a.play().catch(()=>{}); }catch(e){} }
+
+/* ========== leaderboard stinkbucks ========== */
+function renderBoard(){ const el=document.getElementById('leaderboard'); el.innerHTML=''; board = JSON.parse(ls.getItem(boardKey) || '[]');
+  // sort desc
+  board.sort((a,b)=>b.score-a.score);
+  if(!board.length) el.innerHTML='<div style="color:rgba(255,255,255,0.6)">no stinkbucks yet. earn some!</div>';
+  board.forEach(item=>{ const d=document.createElement('div'); d.className='leader'; d.innerHTML = '<div>'+escapeHtml(item.name)+'</div><div class="stink">'+item.score+' 💩</div>'; el.appendChild(d); });
+}
+function addLeader(name,amt){ const arr=JSON.parse(ls.getItem(boardKey)||'[]'); const idx=arr.findIndex(x=>x.name===name); if(idx>=0) arr[idx].score+=amt; else arr.push({name,score:amt}); ls.setItem(boardKey, JSON.stringify(arr)); renderBoard(); }
+function rewardSelf(n){ const name = prompt('who gets stinkbucks?', 'you'); if(!name) return; addLeader(name,n); }
+function clearLeaderboard(){ if(confirm('reset leaderboard?')){ ls.removeItem(boardKey); board=[]; renderBoard(); } }
+renderBoard();
+
+/* ========== mini-game: catch gibby ========== */
+const gameArea = document.getElementById('game-area');
+function spawnGibbyMini(){
+  const g = document.createElement('div'); g.className='gibby-mini';
+  g.style.left = (Math.random()*(gameArea.clientWidth-60))+'px';
+  g.style.top = (Math.random()*(gameArea.clientHeight-60))+'px';
+  g.addEventListener('click', ()=>{
+    gameScore += 1; document.getElementById('game-score').innerText = gameScore; addLeader('player',1);
+    g.remove();
+  });
+  gameArea.appendChild(g);
+  setTimeout(()=>{ try{ g.remove(); }catch(e){} }, 2200);
+}
+function startGame(){
+  if(gameActive) return;
+  gameActive=true; gameScore=0; document.getElementById('game-score').innerText=0;
+  gameLoop = setInterval(()=>{ spawnGibbyMini(); if(Math.random()<0.1) spawnGibbyMini(); }, 700);
+}
+function stopGame(){ gameActive=false; clearInterval(gameLoop); Array.from(document.getElementsByClassName('gibby-mini')).forEach(n=>n.remove()); }
+
+/* ========== confetti & dance mode ========== */
+const confettiCanvas = document.getElementById('confetti'); const ctx = confettiCanvas.getContext('2d'); let pieces=[];
+function resize(){ confettiCanvas.width=window.innerWidth; confettiCanvas.height=window.innerHeight; }
+window.addEventListener('resize', resize); resize();
+function initConfetti(n=120){ pieces=[]; for(let i=0;i<n;i++){ pieces.push({x:Math.random()*confettiCanvas.width,y:Math.random()*confettiCanvas.height-200,r:Math.random()*6+4,d:Math.random()*50+1,color:['#ff2d95','#ffd300','#35ff7a','#19b8ff'][Math.floor(Math.random()*4)],tilt:Math.random()*10-5}); } }
+let confLoop=null;
+function runConfetti(){
+  if(confLoop) cancelAnimationFrame(confLoop);
+  function step(){ ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height); for(let p of pieces){ p.y += 2 + Math.sin(p.d/10); p.x += Math.sin(p.d/15)*2; p.tilt += 0.05; ctx.beginPath(); ctx.lineWidth = p.r; ctx.strokeStyle = p.color; ctx.moveTo(p.x + p.tilt + p.r/2, p.y); ctx.lineTo(p.x + p.tilt, p.y + p.tilt + p.r/2); ctx.stroke(); if(p.y>confettiCanvas.height+60){ p.y=-40; p.x=Math.random()*confettiCanvas.width; } } confLoop = requestAnimationFrame(step); }
+  step();
+}
+function clearConfetti(){ pieces=[]; ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height); if(confLoop) cancelAnimationFrame(confLoop); }
+
+/* dance mode toggles */
+let party=false; let partyAudio=null;
+function toggleDance(){
+  party = !party;
+  const overlay = document.getElementById('dance-overlay');
+  if(party){
+    overlay.classList.add('on'); initConfetti(180); runConfetti();
+    if(!partyAudio){ partyAudio = new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'); partyAudio.loop=true; partyAudio.volume=0.28; }
+    partyAudio.play().catch(()=>{});
+    document.getElementById('belly-btn').innerText='gibby dance: ON (click to stop)';
+  } else {
+    overlay.classList.remove('on'); clearConfetti(); if(partyAudio) partyAudio.pause(); document.getElementById('belly-btn').innerText=\"gibby's belly (click me)\";
+  }
+}
+
+/* secret easter */
+function revealSecret(){ alert('omega secret unlocked: dance lair activated'); scrollTo('home'); if(!party) toggleDance(); }
+
+/* ========== keyboard shortcuts ========== */
+window.addEventListener('keydown',(e)=>{
+  if(e.key==='p'){ toggleDance(); }
+  if(e.key==='g'){ addLeader('you',10) }
+  if(e.key==='c'){ clearConfetti(); }
+  if(e.key==='s'){ revealSecret(); }
+});
+
+/* ========== small polish: logo hover spin & gibby click sfx ========== */
+document.getElementById('logo').addEventListener('mouseenter', ()=>{ document.getElementById('logo').style.transform='rotate(10deg) scale(1.04)'; });
+document.getElementById('logo').addEventListener('mouseleave', ()=>{ document.getElementById('logo').style.transform='rotate(0) scale(1)'; });
+const bellySfx = new Audio('https://www.soundjay.com/human/sounds/burp-01.mp3'); bellySfx.volume=0.5;
+document.getElementById('gibby-giant').addEventListener('click', ()=>{ bellySfx.currentTime=0; bellySfx.play().catch(()=>{}); toggleDance(); });
+
+/* ========== init sample content ========== */
+addPolaroid('https://i.imgur.com/7kB2s5T.jpg'); addPolaroid('https://i.imgur.com/YW3z7u2.jpg'); addPolaroid('https://i.imgur.com/6bKQy7v.jpg');
+renderBoard();
+
+/* convenience: export site data */
+window._exportAll = ()=>{ const dump={polls:pollCounts,fans:JSON.parse(ls.getItem(fanKey)||'[]'),gallery:JSON.parse(ls.getItem(galleryKey)||'[]'),board:JSON.parse(ls.getItem(boardKey)||'[]')}; const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([JSON.stringify(dump,0,2)],{type:'application/json'})); a.download='gibbyverse-export.json'; a.click(); }
 </script>
 </body>
 </html>
